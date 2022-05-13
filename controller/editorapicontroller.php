@@ -196,6 +196,7 @@ class EditorApiController extends OCSController {
      * @param string $directToken - direct token
      * @param integer $version - file version
      * @param bool $inframe - open in frame
+     * @param bool $inviewer - open in viewer
      * @param bool $desktop - desktop label
      * @param string $guestName - nickname not logged user
      * @param bool $template - file is template
@@ -206,7 +207,7 @@ class EditorApiController extends OCSController {
      * @NoAdminRequired
      * @PublicPage
      */
-    public function config($fileId, $filePath = null, $shareToken = null, $directToken = null, $version = 0, $inframe = false, $desktop = false, $guestName = null, $template = false, $anchor = null) {
+    public function config($fileId, $filePath = null, $shareToken = null, $directToken = null, $version = 0, $inframe = false, $inviewer = false, $desktop = false, $guestName = null, $template = false, $anchor = null) {
 
         if (!empty($directToken)) {
             list ($directData, $error) = $this->crypt->ReadHash($directToken);
@@ -459,11 +460,11 @@ class EditorApiController extends OCSController {
             ];
 
             if (!$desktop) {
-                if ($this->config->GetSameTab()) {
+                if ($this->config->GetSameTab() && !$inviewer) {
                     $params["editorConfig"]["customization"]["goback"]["blank"] = false;
                 }
 
-                if ($inframe === true || !empty($directToken)) {
+                if (($inframe === true || !empty($directToken)) && !$inviewer) {
                     $params["editorConfig"]["customization"]["goback"]["requestClose"] = true;
                 }
             }
