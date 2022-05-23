@@ -127,7 +127,7 @@ class ExtraPermissions {
         }
 
         $shareId = $share->getId();
-        $extra = self::get($shareId);
+        $extra = $this->get($shareId);
 
         if(empty($extra)) {
             $extra["id"] = -1;
@@ -176,7 +176,7 @@ class ExtraPermissions {
             return $result;
         }
 
-        $extras = self::getList($shareIds);
+        $extras = $this->getList($shareIds);
         foreach ($extras as $extra) {
             foreach ($result as &$changeExtra) {
                 if ($extra["share_id"] === $changeExtra["share_id"]) {
@@ -202,9 +202,9 @@ class ExtraPermissions {
         $result = false;
 
         if ($extraId > 0) {
-            $result = self::update($share->getId(), $permissions);
+            $result = $this->update($share->getId(), $permissions);
         } else {
-            $result = self::insert($share->getId(), $permissions);
+            $result = $this->insert($share->getId(), $permissions);
         }
 
         return $result;
@@ -251,7 +251,7 @@ class ExtraPermissions {
      *
      * @return array
      */
-    private static function get($shareId) {
+    private function get($shareId) {
         $connection = \OC::$server->getDatabaseConnection();
         $select = $connection->prepare("
             SELECT id, share_id, permissions
@@ -272,7 +272,7 @@ class ExtraPermissions {
      *
      * @return array
      */
-    private static function getList($shareIds) {
+    private function getList($shareIds) {
         $connection = \OC::$server->getDatabaseConnection();
 
         $condition = "";
@@ -303,7 +303,7 @@ class ExtraPermissions {
      *
      * @return bool
      */
-    private static function insert($shareId, $permissions) {
+    private function insert($shareId, $permissions) {
         $connection = \OC::$server->getDatabaseConnection();
         $insert = $connection->prepare("
             INSERT INTO `*PREFIX*" . self::TableName_Key . "`
@@ -321,7 +321,7 @@ class ExtraPermissions {
      *
      * @return bool
      */
-    private static function update($shareId, $permissions) {
+    private function update($shareId, $permissions) {
         $connection = \OC::$server->getDatabaseConnection();
         $update = $connection->prepare("
             UPDATE `*PREFIX*" . self::TableName_Key . "`
